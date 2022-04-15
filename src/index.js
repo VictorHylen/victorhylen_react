@@ -32,7 +32,7 @@ function Table(props) {
       <table id = "table">
         
         <tr>
-        <th onClick={() => sortID(props.list)}>Tag id</th>
+          <th onClick={() => sortID(props.list)}>Tag id</th>
           <th onClick={() => sortName(props.list)}>name</th>
           <th onClick={() => sortCourse(props.list)}>course name</th>
           <th onClick={() => sortDate(props.list)}>registration id</th>
@@ -44,7 +44,7 @@ function Table(props) {
               <td>{val.student_id}</td>
               <td>{val.student_name}</td>
               <td>{val.course_name}</td>
-              <td>{val.registation_time}</td>
+              <td>{val.reg_time}</td>
             </tr>
             </tbody>
           )
@@ -115,29 +115,7 @@ function sortID (response){
 
 
 function sortDate (response) {
-
-
-  response.sort(function(a, b){
-    var nameA = a.registation_time.toLowerCase(), nameB = b.registation_time.toLowerCase();
-    if (nameA < nameB)
-     return -1;
-    if (nameA > nameB)
-     return 1;
-    return 0; 
-   });
-
+  response.sort((a, b) => (a.reg_time > b.reg_time) ? 1 : -1)
   const element = <Table list={response} />; 
   ReactDOM.render(element, document.getElementById("index"))
-
-
-
 }
-
-
-
-
-
-
-
-
-

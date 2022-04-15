@@ -97,82 +97,91 @@ router.post("/courses", async (req, res) => {
  // get info about student && assigned students
  router.get("/info", async (req, res) => {
      const s = await User.find();
-     students = s.map(s => s.tag)
 
 
      const r = await Registration.find();
-     registations = r.map(r => r.tag + ":" + r.coursecode)
      
 
      //all courses
      const c = await Course.find();
-     
-
-     //declare course code
-     s.course_code = c.map(c => c.code)
-
-
-
-     //declare all courses that are registraded
-     r.course_code = r.map(r => r.coursecode)
-
-
-     for (let student of s) {
-         for (let reg of r){
-                //console.log(student.tag);
-                //console.log(reg.tag);
-                //all courses
-                s.stud_id = s.map(s => s.tag)
-                s.course_name = c.map(c => c.name)
-                s.reg_id = r.map(r => r.tag)
-                s.registation_time = r.map(r => r.date)
-                const code = r.map(r => r.coursecode)
-
-                if(student.tag == reg.tag){
-                    student.course_code = code
-                    student.registation_time = reg.date
-                }
-            }
-        }
-
-    
-
     
     const reg_code = [];
     const crc_name = [];
     const name = [];
+    const student = []
+    const studentname = []
+    const date = []
 
 
     for (let i = 0; i < r.length; i++) {
-        reg_code.push(r[i].coursecode);
+        reg_code.push({tag: r[i].tag, code: r[i].coursecode, name: r[i].name, regtime: r[i].date});
+
     }
 
     for (let i = 0; i < c.length; i++) {
         crc_name.push({code: c[i].code, name: c[i].name});
     }
 
+
+    for (let i = 0; i < s.length; i++) {
+
+        
+        student.push({tag: s[i].tag, name: s[i].name});
+        console.log(student);
+
+        
+    }
+
     for (let i = 0; i < reg_code.length; i++) {
         for (let j = 0; j < crc_name.length; j++) {
-            if (reg_code[i] == crc_name[j].code) {
-                name.push(crc_name[j].name); 
+
+
+            
+
+            if (reg_code[i].code == crc_name[j].code) {
+                
+
+                name.push(crc_name[j].name);
+                
+
+            }
+           
+        }
+    }
+
+    for (let i = 0; i < reg_code.length; i++) {
+        for (let j = 0; j < student.length; j++) {
+
+
+            if (reg_code[i].tag == student[j].tag) {
+                console.log(student[j].tag);
+                date.push(reg_code[i].regtime)
+
+                studentname.push(student[j].name);
             }
         }
     }
 
+    
+
+
+
 
     const data = []
-     for(let i = 0; i< s.length; i++){     
+     for(let i = 0; i< r.length; i++){    
+
+          
 
          data.push
          ({
-             student_id: s[i].tag,
-             student_name: s[i].name,
-             course_name: name[i],
-             registation_time: s[i].registation_time
+             student_id: reg_code[i].tag,
+             student_name: studentname[i],
+             course_name: reg_code[i].name,
+             reg_time: date[i]
          });
      }
-
         res.send(data)
+    
       
 
     });
